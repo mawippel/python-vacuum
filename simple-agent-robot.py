@@ -29,10 +29,10 @@ actionsMatrix = [
 currLine = 1
 currCol = 1
 
-def exibir(matrix):
-    plt.imshow(matrix, 'gray')
+def renderMatrix(matrix):
+    plt.imshow(matrix, 'pink')
     plt.show(block=False)
-    plt.plot(currCol, currLine, '*r', 'LineWidth', 10)
+    plt.plot(currCol, currLine, '*r', 'LineWidth', 5)
     plt.pause(0.5)
     plt.clf()
 
@@ -41,14 +41,14 @@ def createWorld(m):
         for aI in range(1, 5):
             number = random.randint(0, 3)
             m[mI][aI] = 2 if number == 1 else 0
-    exibir(matrix)
+    renderMatrix(matrix)
 
 def findNextAction(x, y):
   return actionsMatrix[x][y]
 
 # decides which action will be done
 # Actions = up (0), down (1), left (2), right (3), clean(4)
-def agenteReativoSimples(x, y):
+def simpleAgentRobot(x, y):
   if (matrix[x][y] == 2): # if it's dirty, return the clean action
     return 4
   return findNextAction(x, y)
@@ -59,27 +59,27 @@ def main():
   global currLine
   global currCol
   while True:
-    action = agenteReativoSimples(currLine, currCol)
+    action = simpleAgentRobot(currLine, currCol)
     if (action == 0): # go up
       print("up")
       currLine = currLine - 1 # remove 1 line
-      exibir(matrix)
+      renderMatrix(matrix)
     elif (action == 1): # go down
       print("down")
       currLine = currLine + 1
-      exibir(matrix)
+      renderMatrix(matrix)
     elif (action == 2): # go left
       print("left")
       currCol = currCol - 1
-      exibir(matrix)
+      renderMatrix(matrix)
     elif (action == 3): # go right
       print("right")
       currCol = currCol + 1
-      exibir(matrix)
+      renderMatrix(matrix)
     elif (action == 4): # clean
       print("clean")
       matrix[currLine][currCol] = 0
-      exibir(matrix)
+      renderMatrix(matrix)
     else:
       print("end")
       break
@@ -93,32 +93,3 @@ def main():
 
 if __name__ == "__main__":
   main()
-
-'''
-lineBefore = 1
-columnBefore = 1
-
-for i in range(1, len(matrix) - 1): #linhas
-
-  if (i != lineBefore):
-    matrix[lineBefore][columnBefore] = 0
-
-  if ((i % 2) == 0): # par
-    # for de costas
-    for j in range(len(matrix[i]) - 2, 0, -1):
-      matrix[i][columnBefore] = 0
-      matrix[i][j] = 3
-      columnBefore = j
-      exibir(matrix)
-  else: # impar
-    # for de frente
-    for j in range(1, len(matrix[i]) - 1):
-      if (i == 1 and j == 1):
-        continue
-      matrix[i][columnBefore] = 0
-      matrix[i][j] = 3
-      columnBefore = j
-      exibir(matrix)
-  
-  lineBefore = i
-'''
