@@ -1,11 +1,6 @@
 import matplotlib.pyplot as plt
 import random
 
-def exibir(I):
-    plt.imshow(I, 'gray')
-    plt.show(block=False)
-    plt.pause(0.5)
-    plt.clf()
 
 # 0 -> clean
 # 1 -> wall
@@ -34,11 +29,19 @@ actionsMatrix = [
 currLine = 1
 currCol = 1
 
+def exibir(matrix):
+    plt.imshow(matrix, 'gray')
+    plt.show(block=False)
+    plt.plot(currCol, currLine, '*r', 'LineWidth', 10)
+    plt.pause(0.5)
+    plt.clf()
+
 def createWorld(m):
     for mI in range(1, 5):
         for aI in range(1, 5):
             number = random.randint(0, 3)
             m[mI][aI] = 2 if number == 1 else 0
+    exibir(matrix)
 
 def findNextAction(x, y):
   return actionsMatrix[x][y]
@@ -60,18 +63,23 @@ def main():
     if (action == 0): # go up
       print("up")
       currLine = currLine - 1 # remove 1 line
+      exibir(matrix)
     elif (action == 1): # go down
       print("down")
       currLine = currLine + 1
+      exibir(matrix)
     elif (action == 2): # go left
       print("left")
       currCol = currCol - 1
+      exibir(matrix)
     elif (action == 3): # go right
       print("right")
       currCol = currCol + 1
+      exibir(matrix)
     elif (action == 4): # clean
       print("clean")
       matrix[currLine][currCol] = 0
+      exibir(matrix)
     else:
       print("end")
       break
