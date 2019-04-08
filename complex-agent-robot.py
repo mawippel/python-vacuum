@@ -1,32 +1,8 @@
 import matplotlib.pyplot as plt
 import random
+from Node import *
 from tkinter import messagebox
 from copy import copy, deepcopy
-
-
-class Node:
-    def __init__(self, x, y, parent=None):
-        self.x = x
-        self.y = y
-        self.parent = parent
-
-    def set_x(self, x):
-        self.x = x
-
-    def set_y(self, y):
-        self.y = y
-
-    def get_x(self):
-        return self.x
-
-    def get_y(self):
-        return self.y
-
-    def set_parent(self, parent):
-        self.parent = parent
-
-    def get_parent(self):
-        return self.parent
 
 
 # 0 -> clean
@@ -58,12 +34,12 @@ solution = [Node(1, 1)]
 process_map = []
 
 
-def isMapClean():
+def mapNotClean():
     for i in range(1, len(matrix) - 1):
         for j in range(1, len(matrix[i]) - 1):
             if (matrix[i][j] == 2):
-                return False
-    return True
+                return True
+    return False
 
 
 def renderMatrix(matrix):
@@ -77,6 +53,8 @@ def renderMatrix(matrix):
 def createWorld(m):
     for mI in range(1, 5):
         for aI in range(1, 5):
+            if (mI == 1 and aI == 1):
+                continue
             number = random.randint(0, 3)
             m[mI][aI] = 2 if number == 1 else 0
     renderMatrix(matrix)
@@ -86,61 +64,86 @@ def createWorld(m):
     presentationMatrix = deepcopy(matrix)
 
 
-def has_position(x, y):
+def hasPosition(x, y):
     if (matrix[x][y] == 1):
         return False
     return True
 
 
-def floodfill():
+def lookLeft(x, y, node):
+    if (hasPosition(x - 1, y)):
+        new_node = Node(x - 1, y, node)
+        if (process_map[x - 1][y] == 2):
+            return new_node
+        if (process_map[x - 1][y] != 4):
+            stack.append(new_node)
+            process_map[x - 1][y] = 4
+
+
+def lookRight(x, y, node):
+    if (hasPosition(x + 1, y)):
+        new_node = Node(x + 1, y, node)
+        if (process_map[x + 1][y] == 2):
+            return new_node
+        if (process_map[x + 1][y] != 4):
+            stack.append(new_node)
+            process_map[x + 1][y] = 4
+
+
+def lookAbove(x, y, node):
+    if (hasPosition(x, y - 1)):
+        new_node = Node(x, y - 1, node)
+        if (process_map[x][y - 1] == 2):
+            return new_node
+        if (process_map[x][y - 1] != 4):
+            stack.append(new_node)
+            process_map[x][y - 1] = 4
+
+
+def lookDown(x, y, node):
+    if (hasPosition(x, y + 1)):
+        new_node = Node(x, y + 1, node)
+        if (process_map[x][y + 1] == 2):
+            return new_node
+        if (process_map[x][y + 1] != 4):
+            stack.append(new_node)
+            process_map[x][y + 1] = 4
+
+
+def discoverPath():
     while (len(stack) != 0):
         node = stack.pop(0)
         x = node.get_x()
         y = node.get_y()
 
-        if (has_position(x - 1, y)):
-            new_node = Node(x - 1, y, node)
-            if (process_map[x - 1][y] == 2):
-                return new_node
-            if (process_map[x - 1][y] != 4):
-                stack.append(new_node)
-                process_map[x - 1][y] = 4
+        auxNode = lookLeft(x, y, node)
+        if (auxNode):
+            return auxNode
 
-        if (has_position(x, y - 1)):
-            new_node = Node(x, y - 1, node)
-            if (process_map[x][y - 1] == 2):
-                return new_node
-            if (process_map[x][y - 1] != 4):
-                stack.append(new_node)
-                process_map[x][y - 1] = 4
+        auxNode = lookAbove(x, y, node)
+        if (auxNode):
+            return auxNode
 
-        if (has_position(x + 1, y)):
-            new_node = Node(x + 1, y, node)
-            if (process_map[x + 1][y] == 2):
-                return new_node
-            if (process_map[x + 1][y] != 4):
-                stack.append(new_node)
-                process_map[x + 1][y] = 4
+        auxNode = lookRight(x, y, node)
+        if (auxNode):
+            return auxNode
 
-        if (has_position(x, y + 1)):
-            new_node = Node(x, y + 1, node)
-            if (process_map[x][y + 1] == 2):
-                return new_node
-            if (process_map[x][y + 1] != 4):
-                stack.append(new_node)
-                process_map[x][y + 1] = 4
+        auxNode = lookDown(x, y, node)
+        if (auxNode):
+            return auxNode
 
 
 def main():
     global matrix
-    createWorld(matrix)
     global process_map
     global stack
     global currCol
     global currLine
+    
+    createWorld(matrix)
 
-    while (not isMapClean()):
-        path = floodfill()
+    while (mapNotClean()):
+        path = discoverPath()
         x = path.get_x()
         y = path.get_y()
 
@@ -161,9 +164,10 @@ def main():
         currLine = path.get_x()
         renderMatrix(presentationMatrix)
         if (presentationMatrix[currLine][currCol] == 2):
-          presentationMatrix[currLine][currCol] = 0
-    print("Aecio Neves limpou tudo com %s pontos" % len(solution))
-    messagebox.showinfo("Aecio NEVE", "Aecio Neves aspirou tudo com %s pontos" % len(solution))
+            presentationMatrix[currLine][currCol] = 0
+    renderMatrix(presentationMatrix)
+    messagebox.showinfo(
+        "Aecio NEVE", "Aecio Neves aspirou tudo com %s pontos" % (len(solution) - 1))
 
 
 if __name__ == "__main__":
