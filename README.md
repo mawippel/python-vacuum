@@ -1,4 +1,4 @@
-# aspirador-po (Vacuum Robot)
+# python-vacuum (Vacuum Robot)
 
 Vacuum Robot algorithm implemented for Artificial Inteligence at FURB;
 
