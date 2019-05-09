@@ -1,6 +1,6 @@
 # python-vacuum (Vacuum Robot)
 
-Vacuum Robot algorithm implemented for Artificial Inteligence at FURB;
+Vacuum Cleaner robot algorithm implemented in Python
 
 Authors
 > [Marcelo Wippel](https://github.com/mawippel) <br>
